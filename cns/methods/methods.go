@@ -18,6 +18,7 @@ package methods
 
 import (
 	"context"
+	"log"
 
 	"github.com/vmware/govmomi/cns/types"
 	"github.com/vmware/govmomi/vim25/soap"
@@ -231,6 +232,52 @@ func (b *CnsConfigureVolumeACLsBody) Fault() *soap.Fault { return b.Fault_ }
 
 func CnsConfigureVolumeACLs(ctx context.Context, r soap.RoundTripper, req *types.CnsConfigureVolumeACLs) (*types.CnsConfigureVolumeACLsResponse, error) {
 	var reqBody, resBody CnsConfigureVolumeACLsBody
+
+	reqBody.Req = req
+
+	if err := r.RoundTrip(ctx, &reqBody, &resBody); err != nil {
+		return nil, err
+	}
+
+	return resBody.Res, nil
+}
+
+// Cns Snapshot Methods
+
+type CnsCreateSnapshotsBody struct {
+	Req    *types.CnsCreateSnapshots        `xml:"urn:vsan CnsCreateSnapshots,omitempty"`
+	Res    *types.CnsCreateSnapshotsResponse `xml:"urn:vsan CnsCreateSnapshotsResponse,omitempty"`
+	Fault_ *soap.Fault                      `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault,omitempty"`
+}
+
+func (b *CnsCreateSnapshotsBody) Fault() *soap.Fault { return b.Fault_ }
+
+func CnsCreateSnapshots(ctx context.Context, r soap.RoundTripper, req *types.CnsCreateSnapshots) (*types.CnsCreateSnapshotsResponse, error) {
+	var reqBody, resBody CnsCreateSnapshotsBody
+
+	reqBody.Req = req
+
+	log.Printf("govmomi methods CnsCreateSnapshots request: [%+v] response Body: [%+v]", reqBody, resBody)
+
+	if err := r.RoundTrip(ctx, &reqBody, &resBody); err != nil {
+		return nil, err
+	}
+
+	log.Printf("After RoundTrip: govmomi methods CnsCreateSnapshots request: [%+v] response Body: [%+v]", reqBody, resBody)
+
+	return resBody.Res, nil
+}
+
+type CnsDeleteSnapshotBody struct {
+	Req    *types.CnsDeleteSnapshots        `xml:"urn:vsan CnsDeleteSnapshots,omitempty"`
+	Res    *types.CnsDeleteSnapshotsResponse `xml:"urn:vsan CnsDeleteSnapshotsResponse,omitempty"`
+	Fault_ *soap.Fault                      `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault,omitempty"`
+}
+
+func (b *CnsDeleteSnapshotBody) Fault() *soap.Fault { return b.Fault_ }
+
+func CnsDeleteSnapshots(ctx context.Context, r soap.RoundTripper, req *types.CnsDeleteSnapshots) (*types.CnsDeleteSnapshotsResponse, error) {
+	var reqBody, resBody CnsDeleteSnapshotBody
 
 	reqBody.Req = req
 

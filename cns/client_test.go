@@ -256,6 +256,68 @@ func TestClient(t *testing.T) {
 		}
 	}
 
+	// Test CreateSnapshot API
+	// Construct the CNS SnapshotCreateSpec list
+	desc := "example-vanilla-block-snapshot"
+	var cnsSnapshotCreateSpecList []cnstypes.CnsSnapshotCreateSpec
+	cnsSnapshotCreateSpec := cnstypes.CnsSnapshotCreateSpec{
+		VolumeId: cnstypes.CnsVolumeId{
+			Id: volumeId,
+		},
+		Description: desc,
+	}
+	cnsSnapshotCreateSpecList = append(cnsSnapshotCreateSpecList, cnsSnapshotCreateSpec)
+	t.Logf("Creating snapshot using the spec: %+v", pretty.Sprint(cnsSnapshotCreateSpecList))
+	createSnapshotTask, err := cnsClient.CreateSnapshots(ctx, cnsSnapshotCreateSpecList)
+	if err != nil {
+		t.Errorf("Failed to take snapshot. Error: %+v \n", err)
+		t.Fatal(err)
+	}
+	createSnapshotTaskInfo, err := GetTaskInfo(ctx, createSnapshotTask)
+	if err != nil {
+		t.Errorf("Failed to take snapshot. Error: %+v \n", err)
+		t.Fatal(err)
+	}
+	snapshotOperationRes := createSnapshotTaskInfo.Result.(cnstypes.CnsSnapshotCreateResult)
+	if err != nil {
+		t.Errorf("Failed to take snapshot. Error: %+v \n", err)
+		t.Fatal(err)
+	}
+	t.Logf("CreateSnapshot: Snapshot created successfully. volumeId: %q, snapshot id %q, time stamp %+v, opId: %q", volumeId, snapshotOperationRes.Snapshot.SnapshotId.Id, snapshotOperationRes.Snapshot.CreateTime, createSnapshotTaskInfo.ActivationId)
+
+	// Test DeleteSnapshot API
+	// Construct the CNS SnapshotDeleteSpec list
+	snapshotId := snapshotOperationRes.Snapshot.SnapshotId.Id
+	var cnsSnapshotDeleteSpecList []cnstypes.CnsSnapshotDeleteSpec
+	cnsSnapshotDeleteSpec := cnstypes.CnsSnapshotDeleteSpec{
+		VolumeId: cnstypes.CnsVolumeId{
+			Id: volumeId,
+		},
+		SnapshotId: cnstypes.CnsSnapshotId{
+			Id: snapshotId,
+		},
+	}
+	cnsSnapshotDeleteSpecList = append(cnsSnapshotDeleteSpecList, cnsSnapshotDeleteSpec)
+	t.Logf("Deleting snapshot using the spec: %+v", pretty.Sprint(cnsSnapshotCreateSpecList))
+	deleteSnapshotTask, err := cnsClient.DeleteSnapshots(ctx, cnsSnapshotDeleteSpecList)
+	if err != nil {
+		t.Errorf("Failed to delete snapshot. Error: %+v \n", err)
+		t.Fatal(err)
+	}
+	deleteSnapshotTaskInfo, err := GetTaskInfo(ctx, deleteSnapshotTask)
+	if err != nil {
+		t.Errorf("Failed to delete snapshot. Error: %+v \n", err)
+		t.Fatal(err)
+	}
+	deleteSnapshotOperationRes := deleteSnapshotTaskInfo.Result.(cnstypes.CnsSnapshotDeleteResult)
+	if err != nil {
+		t.Errorf("Failed to delete snapshot. Error: %+v \n", err)
+		t.Fatal(err)
+	}
+
+	t.Logf("DeleteSnapshot: Snapshot deleted successfully. volumeId: %q, snapshot id %q, opId: %q, results: %+v", volumeId, snapshotId, deleteSnapshotTaskInfo.ActivationId, deleteSnapshotOperationRes)
+
+
 	// Test Relocate API
 	// Relocate API is not supported on ReleaseVSAN67u3 and ReleaseVSAN70
 	// This API is available on vSphere 7.0u1 onward

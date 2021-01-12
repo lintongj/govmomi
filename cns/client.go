@@ -18,6 +18,7 @@ package cns
 
 import (
 	"context"
+	"log"
 
 	"github.com/vmware/govmomi/cns/methods"
 	cnstypes "github.com/vmware/govmomi/cns/types"
@@ -206,3 +207,33 @@ func (c *Client) ConfigureVolumeACLs(ctx context.Context, aclConfigSpecs ...cnst
 	}
 	return object.NewTask(c.vim25Client, res.Returnval), nil
 }
+
+// Cns Snapshot API client
+
+func (c *Client) CreateSnapshots(ctx context.Context, snapshotCreateSpecList []cnstypes.CnsSnapshotCreateSpec) (*object.Task, error) {
+	req := cnstypes.CnsCreateSnapshots{
+		This:          CnsVolumeManagerInstance,
+		SnapshotSpecs: snapshotCreateSpecList,
+	}
+	res, err := methods.CnsCreateSnapshots(ctx, c.serviceClient, &req)
+	if err != nil {
+		return nil, err
+	}
+
+	log.Printf("govmomi CreateSnapshots returns %+v error: %+v", res, err)
+	return object.NewTask(c.vim25Client, res.Returnval), nil
+}
+
+// DeleteSnapshot calls the CNS Snapshot API.
+func (c *Client) DeleteSnapshots(ctx context.Context, snapshotDeleteSpecList []cnstypes.CnsSnapshotDeleteSpec) (*object.Task, error) {
+	req := cnstypes.CnsDeleteSnapshots{
+		This:                CnsVolumeManagerInstance,
+		SnapshotDeleteSpecs: snapshotDeleteSpecList,
+	}
+	res, err := methods.CnsDeleteSnapshots(ctx, c.serviceClient, &req)
+	if err != nil {
+		return nil, err
+	}
+	return object.NewTask(c.vim25Client, res.Returnval), nil
+}
+
