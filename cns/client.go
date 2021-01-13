@@ -18,8 +18,6 @@ package cns
 
 import (
 	"context"
-	"log"
-
 	"github.com/vmware/govmomi/cns/methods"
 	cnstypes "github.com/vmware/govmomi/cns/types"
 	"github.com/vmware/govmomi/object"
@@ -220,7 +218,6 @@ func (c *Client) CreateSnapshots(ctx context.Context, snapshotCreateSpecList []c
 		return nil, err
 	}
 
-	log.Printf("govmomi CreateSnapshots returns %+v error: %+v", res, err)
 	return object.NewTask(c.vim25Client, res.Returnval), nil
 }
 

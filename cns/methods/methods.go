@@ -18,8 +18,6 @@ package methods
 
 import (
 	"context"
-	"log"
-
 	"github.com/vmware/govmomi/cns/types"
 	"github.com/vmware/govmomi/vim25/soap"
 )
@@ -257,13 +255,9 @@ func CnsCreateSnapshots(ctx context.Context, r soap.RoundTripper, req *types.Cns
 
 	reqBody.Req = req
 
-	log.Printf("govmomi methods CnsCreateSnapshots request: [%+v] response Body: [%+v]", reqBody, resBody)
-
 	if err := r.RoundTrip(ctx, &reqBody, &resBody); err != nil {
 		return nil, err
 	}
-
-	log.Printf("After RoundTrip: govmomi methods CnsCreateSnapshots request: [%+v] response Body: [%+v]", reqBody, resBody)
 
 	return resBody.Res, nil
 }

@@ -718,7 +718,7 @@ func init() {
 }
 
 type CnsSnapshotOperationResult struct {
-	types.DynamicData
+	CnsVolumeOperationResult
 }
 
 func init() {
