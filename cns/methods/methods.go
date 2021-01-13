@@ -18,6 +18,7 @@ package methods
 
 import (
 	"context"
+
 	"github.com/vmware/govmomi/cns/types"
 	"github.com/vmware/govmomi/vim25/soap"
 )
@@ -243,9 +244,9 @@ func CnsConfigureVolumeACLs(ctx context.Context, r soap.RoundTripper, req *types
 // Cns Snapshot Methods
 
 type CnsCreateSnapshotsBody struct {
-	Req    *types.CnsCreateSnapshots        `xml:"urn:vsan CnsCreateSnapshots,omitempty"`
+	Req    *types.CnsCreateSnapshots         `xml:"urn:vsan CnsCreateSnapshots,omitempty"`
 	Res    *types.CnsCreateSnapshotsResponse `xml:"urn:vsan CnsCreateSnapshotsResponse,omitempty"`
-	Fault_ *soap.Fault                      `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault,omitempty"`
+	Fault_ *soap.Fault                       `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault,omitempty"`
 }
 
 func (b *CnsCreateSnapshotsBody) Fault() *soap.Fault { return b.Fault_ }
@@ -263,9 +264,9 @@ func CnsCreateSnapshots(ctx context.Context, r soap.RoundTripper, req *types.Cns
 }
 
 type CnsDeleteSnapshotBody struct {
-	Req    *types.CnsDeleteSnapshots        `xml:"urn:vsan CnsDeleteSnapshots,omitempty"`
+	Req    *types.CnsDeleteSnapshots         `xml:"urn:vsan CnsDeleteSnapshots,omitempty"`
 	Res    *types.CnsDeleteSnapshotsResponse `xml:"urn:vsan CnsDeleteSnapshotsResponse,omitempty"`
-	Fault_ *soap.Fault                      `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault,omitempty"`
+	Fault_ *soap.Fault                       `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault,omitempty"`
 }
 
 func (b *CnsDeleteSnapshotBody) Fault() *soap.Fault { return b.Fault_ }

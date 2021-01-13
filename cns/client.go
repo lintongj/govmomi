@@ -18,6 +18,7 @@ package cns
 
 import (
 	"context"
+
 	"github.com/vmware/govmomi/cns/methods"
 	cnstypes "github.com/vmware/govmomi/cns/types"
 	"github.com/vmware/govmomi/object"
@@ -233,4 +234,3 @@ func (c *Client) DeleteSnapshots(ctx context.Context, snapshotDeleteSpecList []c
 	}
 	return object.NewTask(c.vim25Client, res.Returnval), nil
 }
-
